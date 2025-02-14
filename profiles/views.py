@@ -28,29 +28,6 @@ def view_or_edit_profile(request):
 
 
 @login_required
-def delete_profile(request):
-    if request.method == 'POST':
-        profile = request.user.profile
-        # Delete profile image if it exists
-        if profile.profile_image:
-            profile.profile_image.delete()
-        
-        # Reset profile fields
-        profile.bio = ''
-        profile.gender = ''
-        profile.age = None
-        profile.location = ''
-        profile.interests = ''
-        profile.relationship_goal = ''
-        profile.save()
-        
-        messages.success(request, 'Your profile has been deleted successfully.')
-        return redirect('profile')
-    
-    return redirect('profile')
-
-
-@login_required
 def matching_profiles(request):
     """ Display all matching profiles """
     profiles = Profile.objects.all()
@@ -65,13 +42,15 @@ def like_profile(request, profile_id):
     if request.POST and 'profile_id' in request.POST:
         if 'fa-regular' in request.POST['icon_classlist_value']:
             try:
+                print('Inside the TRY block')
                 messages.success(request, 'You liked this profile')
-                sender = User.objects.get(username=request.user)
-                recipient = User.objects.get(profile=profile_id)
-                message = f"{sender} just liked your profile"
-                notify.send(actor=sender, recipient=recipient, verb='Message', description=message)
-                print('User notified about the like')
-                messages.success(request, 'The user has been notified')
+                print('After the success message')
+                # sender = User.objects.get(username=request.user)
+                # recipient = User.objects.get(profile=profile_id)
+                # message = f"{sender} just liked your profile"
+                # notify.send(actor=sender, recipient=recipient, verb='Message', description=message)
+                # print('User notified about the like')
+                messages.success(request, 'The user has been notified - not true right now')
             except Exception:
                 messages.error(
                     request, 'Sorry, an error occurred. Please try again later')
